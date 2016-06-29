@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -27,22 +26,28 @@ import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String DEFAULT_QUERY = "android";
     private ListView lvBooks;
     private BookAdapter bookAdapter;
     private BookClient client;
-    private ProgressBar progress;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        progress = (ProgressBar) findViewById(R.id.progress);
-
+        //Set the views
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         lvBooks = (ListView) findViewById(R.id.lvBooks);
+
+        //Creates the BookAdapter and assign it to the ListView
         ArrayList<Book> aBooks = new ArrayList<Book>();
         bookAdapter = new BookAdapter(this, aBooks);
         lvBooks.setAdapter(bookAdapter);
+
+        //fetch default Books
+        fetchBooks(DEFAULT_QUERY);
 
     }
 
@@ -75,20 +80,20 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    // Executes an API call to the OpenLibrary search endpoint, parses the results
+    // Executes an API call to the Google Books API search client, parses the results and
     // Converts them into an array of book objects and adds them to the adapter
     private void fetchBooks(String query) {
 
-        progress.setVisibility(ProgressBar.VISIBLE);
+        progressBar.setVisibility(ProgressBar.VISIBLE);
         client = new BookClient();
         client.getBooks(query, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     JSONArray docs = null;
-                    if(response != null) {
+                    if (response != null) {
                         // Get the docs json array
-                        docs = response.getJSONArray("docs");
+                        docs = response.getJSONArray("items");
                         // Parse json array into array of model objects
                         final ArrayList<Book> books = Book.fromJson(docs);
                         // Remove all books from the adapter
@@ -98,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                             bookAdapter.add(book); // add book through the adapter
                         }
                         bookAdapter.notifyDataSetChanged();
-                        progress.setVisibility(ProgressBar.GONE);
+                        progressBar.setVisibility(ProgressBar.GONE);
 
                     }
                 } catch (JSONException e) {
@@ -106,9 +111,10 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                progress.setVisibility(ProgressBar.GONE);
+                progressBar.setVisibility(ProgressBar.GONE);
             }
         });
     }

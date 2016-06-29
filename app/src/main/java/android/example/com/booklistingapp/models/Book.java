@@ -14,6 +14,13 @@ public class Book {
     private String author;
     private String imageUrl;
 
+    private static final String BOOK_NODE_NAME = "volumeInfo";
+    private static final String IMAGES_NODE_NAME = "imageLinks";
+    private static final String IMAGES_NODE_AUTHORS = "authors";
+
+    private static final String TITLE_ELEMENT_NAME = "title";
+    private static final String IMAGE_ELEMENT_NAME = "smallThumbnail";
+
     public Book() {
     }
 
@@ -35,42 +42,33 @@ public class Book {
         return imageUrl;
     }
 
-    // Get medium sized book cover from covers API
-    public String getCoverUrl() {
-        return "http://covers.openlibrary.org/b/olid/" + imageUrl + "-M.jpg?default=false";
-    }
-
-    // Get large sized book cover from covers API
-    public String getLargeCoverUrl() {
-        return "http://covers.openlibrary.org/b/olid/" + imageUrl + "-L.jpg?default=false";
-    }
-
     // Returns a Book given the expected JSON
     public static Book fromJson(JSONObject jsonObject) {
         Book book = new Book();
+        JSONObject volumeInfo = null;
+        JSONObject images = null;
+
         try {
-            // Deserialize json into object fields
-            // Check if a cover edition is available
-            if (jsonObject.has("cover_edition_key"))  {
-                book.imageUrl = jsonObject.getString("cover_edition_key");
-            } else if(jsonObject.has("edition_key")) {
-                final JSONArray ids = jsonObject.getJSONArray("edition_key");
-                book.imageUrl = ids.getString(0);
+            volumeInfo = jsonObject.getJSONObject(BOOK_NODE_NAME);
+            images = volumeInfo.getJSONObject(IMAGES_NODE_NAME);
+
+            book.name = volumeInfo.has(TITLE_ELEMENT_NAME) ? volumeInfo.getString(TITLE_ELEMENT_NAME) : "";
+            book.author = getAuthor(volumeInfo);
+            if (images.has(IMAGE_ELEMENT_NAME)) {
+                book.imageUrl = images.getString(IMAGE_ELEMENT_NAME);
             }
-            book.name = jsonObject.has("title_suggest") ? jsonObject.getString("title_suggest") : "";
-            book.author = getAuthor(jsonObject);
+
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
-        // Return new object
         return book;
     }
 
     // Return comma separated author list when there is more than one author
     private static String getAuthor(final JSONObject jsonObject) {
         try {
-            final JSONArray authors = jsonObject.getJSONArray("author_name");
+            final JSONArray authors = jsonObject.getJSONArray(IMAGES_NODE_AUTHORS);
             int numAuthors = authors.length();
             final String[] authorStrings = new String[numAuthors];
             for (int i = 0; i < numAuthors; ++i) {
@@ -85,8 +83,6 @@ public class Book {
     // Decodes array of book json results into business model objects
     public static ArrayList<Book> fromJson(JSONArray jsonArray) {
         ArrayList<Book> books = new ArrayList<Book>(jsonArray.length());
-        // Process each result in json array, decode and convert to business
-        // object
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject bookJson = null;
             try {
@@ -102,6 +98,5 @@ public class Book {
         }
         return books;
     }
-
 
 }

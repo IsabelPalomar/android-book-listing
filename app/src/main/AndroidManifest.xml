@@ -10,7 +10,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".activities.LauncherActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -30,7 +30,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".activities.SearchResultsActivity"
+            android:name=".activities.BookDetailActivity"
             android:label="@string/title_activity_search_results"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

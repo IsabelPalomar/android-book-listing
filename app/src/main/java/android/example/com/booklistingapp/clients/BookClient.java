@@ -6,6 +6,9 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+/**
+ * Google Books API client to send network requests
+ */
 public class BookClient {
     private static final String API_BASE_URL = "https://www.googleapis.com/";
     private AsyncHttpClient client;
@@ -17,11 +20,10 @@ public class BookClient {
     private String getApiUrl(String relativeUrl) {
         return API_BASE_URL + relativeUrl;
     }
-
     // Method for accessing the search API
     public void getBooks(final String query, JsonHttpResponseHandler handler) {
         try {
-            String url = getApiUrl("search.json?q=");
+            String url = getApiUrl("books/v1/volumes?q=");
             client.get(url + URLEncoder.encode(query, "utf-8"), handler);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

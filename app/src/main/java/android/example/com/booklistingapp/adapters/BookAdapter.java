@@ -23,7 +23,6 @@ import java.util.List;
 
 public class BookAdapter extends ArrayAdapter<Book> {
 
-    // View lookup cache
     private static class ViewHolder {
         public ImageView ivCover;
         public TextView tvTitle;
@@ -34,8 +33,6 @@ public class BookAdapter extends ArrayAdapter<Book> {
         super(context, 0, aBooks);
     }
 
-    // Translates a particular `Book` given a position
-    // into a relevant row within an AdapterView
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
@@ -56,7 +53,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
         // Populate the data into the template view using the data object
         viewHolder.tvTitle.setText(book.getName());
         viewHolder.tvAuthor.setText(book.getAuthor());
-        Picasso.with(getContext()).load(Uri.parse(book.getCoverUrl())).error(R.drawable.no_book_cover).into(viewHolder.ivCover);
+        Picasso.with(getContext()).load(Uri.parse(book.getImageUrl())).error(R.drawable.no_book_cover).into(viewHolder.ivCover);
         // Return the completed view to render on screen
         return convertView;
     }
