@@ -1,13 +1,10 @@
-package android.example.com.booklistingapp;
+package android.example.com.booklistingapp.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
+import android.example.com.booklistingapp.R;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.MotionEvent;
-import android.view.View;
 
 
 public class LauncherActivity extends AppCompatActivity {
@@ -31,7 +28,7 @@ public class LauncherActivity extends AppCompatActivity {
                 startActivity(i);
             }
 
-        }, 1000L);
+        }, 1200L);
 
     }
 
