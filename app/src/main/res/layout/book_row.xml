@@ -8,24 +8,22 @@
         android:id="@+id/ivBookCover"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_margin="8dp" />
+        android:layout_margin="@dimen/activity_default_margin" />
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="@dimen/activity_small_margin"
         android:layout_toRightOf="@+id/ivBookCover"
-        android:text="Title"
-        android:textSize="24dp" />
+        android:textAppearance="?android:textAppearanceMedium" />
 
     <TextView
         android:id="@+id/tvAuthor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_toRightOf="@+id/ivBookCover"
         android:layout_below="@+id/tvTitle"
-        android:text="Author"
-        android:textSize="12dp" />
+        android:layout_marginLeft="@dimen/activity_small_margin"
+        android:layout_toRightOf="@+id/ivBookCover"
+        android:textAppearance="?android:textAppearanceSmall" />
 </RelativeLayout>
